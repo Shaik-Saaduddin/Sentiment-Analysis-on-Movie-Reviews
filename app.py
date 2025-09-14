@@ -23,7 +23,7 @@ st.write("Enter a movie review and find out whether it’s **positive** or **neg
 st.sidebar.header("⚙️ Settings")
 selected_model = st.sidebar.selectbox("Choose Model", list(models.keys()))
 
-user_input = st.text_area("Enter your review here:")
+user_input = st.text_area("📝 Enter your review here:")
 if st.button("Analyze Sentiment"):
     if user_input.strip():
         vectorized = tfidf.transform([user_input])
@@ -49,9 +49,25 @@ with col1:
     st.pyplot(fig)
 
 with col2:
-    st.write("### WordCloud (Positive Reviews)")
-    pos_text = " ".join(df[df['sentiment'] == 1]['review'].values)
-    wordcloud = WordCloud(width=400, height=300, background_color="white").generate(pos_text)
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    st.pyplot()
+    st.write("### WordClouds")
+    col_pos, col_neg = st.columns(2)
+
+    # Positive WordCloud
+    with col_pos:
+        st.write("✅ Positive Reviews")
+        pos_text = " ".join(df[df['sentiment'] == 1]['review'].values)
+        wordcloud_pos = WordCloud(width=400, height=300, background_color="white").generate(pos_text)
+        fig, ax = plt.subplots(figsize=(4, 4))
+        ax.imshow(wordcloud_pos, interpolation="bilinear")
+        ax.axis("off")
+        st.pyplot(fig)
+
+    # Negative WordCloud
+    with col_neg:
+        st.write("❌ Negative Reviews")
+        neg_text = " ".join(df[df['sentiment'] == 0]['review'].values)
+        wordcloud_neg = WordCloud(width=400, height=300, background_color="white").generate(neg_text)
+        fig, ax = plt.subplots(figsize=(4, 4))
+        ax.imshow(wordcloud_neg, interpolation="bilinear")
+        ax.axis("off")
+        st.pyplot(fig)
